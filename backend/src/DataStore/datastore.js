@@ -4,6 +4,7 @@ const UserProfile = require('../models/UserProfile');
 const datastore = {
   knowledgeDocuments: [
     {
+      id: "1",
       title: "Introduction to Node.js",
       content: "Node.js is a runtime environment that executes JavaScript code outside of a browser...",
       tags: ["Node.js", "JavaScript", "Backend"],

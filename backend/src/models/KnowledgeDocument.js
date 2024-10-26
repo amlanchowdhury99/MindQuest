@@ -1,4 +1,5 @@
 const KnowledgeDocumentSchema = {
+    id: { type: String, required: true, default: 1 },
     title: { type: String, required: true },
     content: { type: String, required: true },
     tags: { type: [String], default: [] },
