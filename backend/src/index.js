@@ -1,15 +1,23 @@
 const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const datastore = require('./DataStore/datastore');
+
+dotenv.config();
+
+
+
+// Middleware
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = 8080;
-
-// app.get('/', (req, res) => {
-//   res.send('Hello, World!');
-// });
-
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({
+  origin: '*', // Allows all origins
+}));
+
 
 // Fake database (for simplicity)
 const users = [
@@ -17,6 +25,29 @@ const users = [
   { username: 'user2@gmail.com', name: 'user2', password: 'password2' },
   { username: 'user3@gmail.com', name: 'user3', password: 'password3' }
 ];
+
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+// Get all knowledge documents
+app.get('/api/knowledge', (req, res) => {
+  res.json(datastore.knowledgeDocuments);
+});
+
+// Get a single knowledge document by ID
+app.get('/api/knowledge/:id', (req, res) => {
+  const document = datastore.knowledgeDocuments.find(doc => doc.createdBy.userId === req.params.id);
+  if (!document) return res.status(404).json({ message: 'Document not found' });
+  res.json(document);
+});
+
+// Create a new knowledge document
+app.post('/api/knowledge', (req, res) => {
+  const newDocument = { ...req.body, lastUpdated: new Date() };
+  datastore.knowledgeDocuments.push(newDocument);
+  res.status(201).json(newDocument);
+});
 
 // Registration Endpoint
 app.post('/register', (req, res) => {
