@@ -5,14 +5,13 @@ const datastore = require('./DataStore/datastore');
 
 dotenv.config();
 
-
-
 // Middleware
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = 8080;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 app.use(cors({
   origin: '*', // Allows all origins
@@ -37,7 +36,7 @@ app.get('/api/knowledge', (req, res) => {
 
 // Get a single knowledge document by ID
 app.get('/api/knowledge/:id', (req, res) => {
-  const document = datastore.knowledgeDocuments.find(doc => doc.createdBy.userId === req.params.id);
+  const document = datastore.knowledgeDocuments.find(doc => doc.id === req.params.id);
   if (!document) return res.status(404).json({ message: 'Document not found' });
   res.json(document);
 });
@@ -47,6 +46,55 @@ app.post('/api/knowledge', (req, res) => {
   const newDocument = { ...req.body, lastUpdated: new Date() };
   datastore.knowledgeDocuments.push(newDocument);
   res.status(201).json(newDocument);
+});
+
+//Update Knowledge Document
+app.post('/api/knowledge/:id', (req, res) => {
+  debugger
+  console.log("rakib ekta khan");
+  const index = datastore.knowledgeDocuments.findIndex(d => d.id === req.params.id);
+  if (index !== -1) {
+    const updatedDoc = { id: req.params.id, ...req.body };
+    datastore.knowledgeDocuments[index] = updatedDoc;
+    res.json(updatedDoc);
+  } else {
+    res.status(404).json({ message: 'Document not found' });
+  }
+});
+
+app.delete('/api/knowledge/:id', (req, res) => {
+  const index = datastore.knowledgeDocuments.findIndex(doc => doc.id === req.params.id);
+  if (index !== -1) {
+      datastore.knowledgeDocuments.splice(index, 1);
+      res.status(204).send(); // No content
+  } else {
+      res.status(404).json({ message: 'Document not found' });
+  }
+});
+
+// Get all user profiles
+app.get('/api/users', (req, res) => {
+  res.json(datastore.userProfiles);
+});
+
+// Get a specific user profile by userId
+app.get('/users/:userId', (req, res) => {
+  const profile = datastore.userProfiles.find(user => user.userId === req.params.userId);
+  if (profile) {
+      res.json(profile);
+  } else {
+      res.status(404).json({ message: 'User profile not found' });
+  }
+});
+
+app.delete('/users/:userId', (req, res) => {
+  const index = datastore.userProfiles.findIndex(user => user.userId === req.params.userId);
+  if (index !== -1) {
+      datastore.userProfiles.splice(index, 1);
+      res.status(204).send(); // No content
+  } else {
+      res.status(404).json({ message: 'User profile not found' });
+  }
 });
 
 // Registration Endpoint
@@ -77,11 +125,6 @@ app.post('/login', (req, res) => {
   } else {
     return res.status(401).json({ message: 'Invalid username or password' });
   }
-});
-
-// Home route
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
 });
 
 // Start the server
