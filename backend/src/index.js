@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const { OpenAI } = require('openai');
 const datastore = require('./DataStore/datastore');
 
 dotenv.config();
@@ -11,6 +12,29 @@ const app = express();
 const PORT = 8080;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const openai = new OpenAI({
+  apiKey: 'API_KEY'
+});
+
+// //connect to openai
+
+// const runPrompt = async () => {
+//   const prompt = "Tell me about Hochschule Fulda";
+
+//   try {
+//     const response = await openai.chat.completions.create({
+//       model: "gpt-3.5-turbo-0125",
+//       //model: "text-davinci-003",
+//       messages: [{ role: "user", content: prompt }],
+//     });
+//     console.log(response.choices[0].message.content);
+//   } catch (error) {
+//     console.error("Error calling OpenAI:", error);
+//   }
+// };
+
+// runPrompt();
 
 
 app.use(cors({
@@ -24,6 +48,28 @@ const users = [
   { username: 'user2@gmail.com', name: 'user2', password: 'password2' },
   { username: 'user3@gmail.com', name: 'user3', password: 'password3' }
 ];
+
+//openai route
+// Endpoint to send a prompt to OpenAI
+app.post('/api/prompt', async (req, res) => {
+  const { prompt } = req.body;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo-0125",
+      //model: "text-davinci-003",
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const answer = response.data.choices[0].text.trim();
+    console.log('AI Response:', answer);
+
+    res.status(200).json({ answer });
+  } catch (error) {
+    console.error('Error fetching response from OpenAI:', error);
+    res.status(500).json({ error: 'Error fetching response from OpenAI' });
+  }
+});
 
 app.get('/', (req, res) => {
   res.send('Hello, World!');
