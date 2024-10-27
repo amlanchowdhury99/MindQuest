@@ -5,36 +5,6 @@ const datastore = {
   knowledgeDocuments: [
     {
       id: "1",
-      title: "Introduction to Node.js",
-      content: "Node.js is a runtime environment that executes JavaScript code outside of a browser...",
-      tags: ["Node.js", "JavaScript", "Backend"],
-      type: "article",
-      lastUpdated: new Date(),
-      createdBy: {
-        userId: "1",
-        name: "Alice Johnson",
-        role: "Senior Developer"
-      },
-      contributors: [
-        {
-          userId: "2",
-          name: "Bob Smith",
-          role: "Junior Developer"
-        }
-      ],
-      views: 100,
-      upvotes: 50,
-      comments: [
-        {
-          commentId: "c1",
-          userId: "3",
-          comment: "Great article!",
-          timestamp: new Date()
-        }
-      ]
-    },
-    {
-      id: "2",
       title: "Overview of Hochschule Fulda",
       content: "Hochschule Fulda, or Fulda University of Applied Sciences, is a prominent German institution focused on applied sciences and known for its practical learning approach and regional partnerships. Founded in 1974, it offers over 60 programs across diverse fields including Business, Engineering, and Health Sciences.",
       tags: ["Hochschule Fulda", "Applied Sciences", "University", "Germany"],
