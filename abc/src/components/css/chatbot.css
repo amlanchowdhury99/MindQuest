@@ -1,0 +1,13 @@
+/* src/components/Chatbot.css */
+.chatbot-button {
+    background-color: #00bf72;
+    color: white;
+    border-radius: 50%;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

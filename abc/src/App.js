@@ -1,16 +1,17 @@
+// src/App.js
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
+import './App.css'; 
 
-import './App.css';
-import Login from './login/login';
-
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Login></Login>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <AppRoutes />
+      </div>
+    </Router>
   );
-}
+};
 
-export default App;
+export default App; // Make sure this line is present

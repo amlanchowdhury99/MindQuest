@@ -1,7 +1,9 @@
 // src/Login.js
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './login.css';
 
 const Container = styled.div`
   display: flex; /* Enable flexbox */
@@ -72,23 +74,36 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (email === '' || password === '') {
       setError('All fields are required.');
       return;
     }
 
-    // Perform login (mocked)
-    console.log('Email:', email);
-    console.log('Password:', password);
-    setError(''); // Clear error after successful login
+    try {
+      const response = await axios.post('http://localhost:8080/login', {
+        username: email,
+        password: password,
+      });
 
-    // Further login logic goes here...
+      console.log('Login successful:', response.data);
+      setError(''); // Clear any previous errors
+      
+      // Redirect to home page on success
+      navigate('/home'); // Make sure '/home' matches the route in AppRoutes
+    } catch (error) {
+      if (error.response && error.response.data) {
+        setError(error.response.data.message);
+      } else {
+        setError('An error occurred during login.');
+      }
+    }
   };
+  
 
   return (
     <Container>
